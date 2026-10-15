@@ -4,6 +4,22 @@ Aplikasi manajemen proyek berbasis **Gantt Chart** yang dibangun dengan **React 
 Seluruh data disimpan di `localStorage` dan dilengkapi data contoh (seed) berisi proyek
 “Peluncuran Aplikasi Mobile”.
 
+## Tampilan Aplikasi
+
+**1. Grafik Gantt** — bar tugas (warna + progres), panah dependensi, highlight jalur kritis (merah),
+zoom Harian/Pekan/Bulan, dan penanda hari ini:
+
+![Tampilan Gantt Chart](docs/gantt-chart.png)
+
+**2. Analisis Proyek** — jalur kritis (CPM: slack, forward/backward pass) dan diagram jaringan PERT
+(SVG) beserta tabel estimasi O/M/P, E, σ, dan varian:
+
+![Tampilan Analisis (CPM & PERT)](docs/analisis.png)
+
+> Screenshot diambil dari build produksi (`npm run build` + `npm run preview`) pada viewport
+> 1600×900, memakai data contoh “Peluncuran Aplikasi Mobile”. Tab dapat dibuka langsung lewat URL hash,
+> misal `/#gantt` atau `/#analysis`.
+
 ## Fitur
 
 1. **Manajemen Tugas**

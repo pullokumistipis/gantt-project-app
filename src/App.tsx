@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ProjectProvider, useProject } from './state/ProjectContext';
 import { TaskList } from './components/TaskList';
 import { GanttChart } from './components/GanttChart';
@@ -17,9 +17,25 @@ const TABS: { id: TabId; label: string }[] = [
   { id: 'analysis', label: 'Analisis' },
 ];
 
+function tabFromHash(): TabId {
+  const hash = window.location.hash.replace('#', '');
+  return (TABS.some((t) => t.id === hash) ? hash : 'tasks') as TabId;
+}
+
 function Shell() {
   const { data, updateProject, resetData, schedule } = useProject();
-  const [tab, setTab] = useState<TabId>('tasks');
+  const [tab, setTab] = useState<TabId>(tabFromHash);
+
+  useEffect(() => {
+    const onHash = () => setTab(tabFromHash());
+    window.addEventListener('hashchange', onHash);
+    return () => window.removeEventListener('hashchange', onHash);
+  }, []);
+
+  const goTab = (id: TabId) => {
+    setTab(id);
+    window.location.hash = id;
+  };
 
   const handleReset = () => {
     const ok = window.confirm('Kembalikan seluruh data ke contoh awal? Perubahan Anda akan hilang.');
@@ -63,7 +79,7 @@ function Shell() {
             role="tab"
             aria-selected={tab === item.id}
             className={`tab${tab === item.id ? ' is-active' : ''}`}
-            onClick={() => setTab(item.id)}
+            onClick={() => goTab(item.id)}
           >
             {item.label}
           </button>
@@ -75,7 +91,7 @@ function Shell() {
         {tab === 'gantt' ? <GanttChart /> : null}
         {tab === 'resources' ? <ResourcesView /> : null}
         {tab === 'calendar' ? <CalendarView /> : null}
-        {tab === 'analysis' ? <AnalysisView onOpenGantt={() => setTab('gantt')} /> : null}
+        {tab === 'analysis' ? <AnalysisView onOpenGantt={() => goTab('gantt')} /> : null}
       </main>
 
       <footer className="footer">
